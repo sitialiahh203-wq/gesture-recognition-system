@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Terminal Booting</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    background: black;
+    color: #00ff66;
+    font-family: "Courier New", monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* efek layar monitor */
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.03),
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+}
+
+.terminal {
+    width: 80%;
+    font-size: 28px;
+    z-index: 2;
+    text-shadow: 0 0 10px #00ff66;
+}
+
+.line {
+    margin: 15px 0;
+}
+
+.progress {
+    margin-top: 30px;
+}
+
+.bar {
+    letter-spacing: 3px;
+}
+
+.cursor {
+    animation: blink .8s infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.glitch {
+    animation: glitch .15s infinite;
+}
+
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+    }
+    50% {
+        transform: translate(2px,-2px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="terminal">
+
+<div class="line" id="text"></div>
+
+<div class="line">
+> LOADING STUDENT DATABASE
+</div>
+
+<div class="progress" id="progress"></div>
+
+<div class="line glitch" id="ready"></div>
+
+</div>
+
+
+<script>
+
+const text = [
+"> TERMINAL BOOTING...",
+"> INITIALIZING SYSTEM...",
+"> CONNECTING DATABASE..."
+];
+
+
+let index = 0;
+
+
+function typingEffect(){
+
+    if(index < text.length){
+
+        let element = document.getElementById("text");
+
+        element.innerHTML += text[index] + "<br>";
+
+        index++;
+
+        setTimeout(typingEffect,1200);
+
+    }else{
+
+        startLoading();
+
+    }
+
+}
+
+
+let percent = 0;
+
+
+function startLoading(){
+
+    let bar = document.getElementById("progress");
+
+    let load = setInterval(()=>{
+
+        percent += 10;
+
+        let blocks = "█".repeat(percent/10);
+        let empty = "░".repeat(10-percent/10);
+
+
+        bar.innerHTML =
+        `[${blocks}${empty}] ${percent}%`;
+
+
+        if(percent >=100){
+
+            clearInterval(load);
+
+
+            setTimeout(()=>{
+
+                document.getElementById("ready")
+                .innerHTML =
+                `
+                <br>
+                SYSTEM READY...
+                <br><br>
+                WELCOME, SITI ALIAH
+                `;
+
+
+            },1000);
+
+        }
+
+
+    },700);
+
+}
+
+
+typingEffect();
+
+</script>
+
+
+</body>
+</html>
